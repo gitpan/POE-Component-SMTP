@@ -50,8 +50,8 @@ relies on a CVS version of POE.
 
 package POE::Component::Server::SMTP;
 #
-# $Revision: 1.2 $
-# $Id: SMTP.pm,v 1.2 2003/02/02 23:10:40 cwest Exp $
+# $Revision: 1.3 $
+# $Id: SMTP.pm,v 1.3 2003/02/26 21:50:31 cwest Exp $
 #
 use strict;
 $^W = 1; # At least for development.
@@ -69,7 +69,7 @@ use POE qw[
 ];
 
 use vars qw[$VERSION @ISA @EXPORT];
-$VERSION = (qw$Revision: 1.2 $)[1];
+$VERSION = (qw$Revision: 1.3 $)[1];
 @ISA     = qw[Exporter];
 @EXPORT  = qw[
 	SMTP_SYTEM_STATUS SMTP_SYSTEM_HELP SMTP_SERVICE_READY SMTP_QUIT
@@ -195,9 +195,10 @@ sub spawn {
 		PackageStates      => $args{PackageStates},
 		ObjectStates       => $args{ObjectStates},
 		InlineStates       => {
-			send_banner => \&smtpd_send_banner,
-			HELO        => \&smtpd_HELO,
-			QUIT        => \&smtpd_QUIT,
+# these are shown below for reference and may move elsewhere
+#			send_banner => \&smtpd_send_banner,
+#			HELO        => \&smtpd_HELO,
+#			QUIT        => \&smtpd_QUIT,
 #			DATA        => \&smtpd_DATA,
 #			gotDATA     => \&smtpd_gotDATA,
 			_default    => \&smtpd_default,
@@ -270,7 +271,7 @@ event handler in $_[ARG0];
 =item send_banner
 
 This event is triggered when a client connects and it's time to send
-a banner.  This can be overridden by supplying  your own
+a banner.  This can be supplied in  your own
 C<send_banner> event in your C<InlineStates>.
 
 =cut
@@ -292,7 +293,7 @@ sub smtpd_send_banner {
 =item HELO
 
 This event is triggered when a client sends a HELO command.
-This can be overridden by supplying  your own
+This can be supplied in  your own
 C<HELO> event in your C<InlineStates>.
 
 =cut
@@ -312,7 +313,7 @@ sub smtpd_HELO {
 =item QUIT
 
 This event is triggered when a client sends a QUIT command.
-This can be overridden by supplying  your own
+This can be supplied in  your own
 C<QUIT> event in your C<InlineStates>.
 
 This event should always set C<$heap->{shutdown_now}> to a true value.
