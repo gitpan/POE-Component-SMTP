@@ -1,0 +1,7 @@
+Changes
+MANIFEST
+Makefile.PL
+README
+lib/POE/Component/Server/SMTP.pm
+lib/POE/Filter/SMTP.pm
+test.pl
