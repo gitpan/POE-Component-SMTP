@@ -1,4 +1,11 @@
+1.5
 
+  - Added Address option, thanks to Meng Wong.
+  - Added on_disconnect() state, thanks to Meng Wong.
+  - Imported into personal CVS.
+
+
+----------------------------
 RCS file: /storage/cvsroot/perl/cwest/POE-Component-SMTP/Changes,v
 Working file: Changes
 head: 1.2

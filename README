@@ -11,7 +11,7 @@ DEPENDENCIES
 
 This module requires these other modules and libraries:
 
-  CVS POE
+  POE >= 0.26
   POE::Session::MultiDispatch
   Test::More
 

@@ -1,7 +1,7 @@
 package POE::Filter::SMTP;
 #
 # $Revision: 1.1 $
-# $Id: SMTP.pm,v 1.1 2003/02/01 22:01:56 cwest Exp $
+# $Id: SMTP.pm,v 1.1 2003/10/30 23:37:52 cwest Exp $
 #
 use strict;
 $^W = 1; # At least for development.

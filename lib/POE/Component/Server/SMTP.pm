@@ -6,7 +6,7 @@ POE::Component::Server::SMTP - SMTP Protocol Implementation
 
   use POE;
   use POE::Component::Server::SMTP;
-  
+
   POE::Component::Server::SMTP->spawn(
     Port => 2525,
   	InlineStates => {
@@ -18,14 +18,14 @@ POE::Component::Server::SMTP - SMTP Protocol Implementation
   sub smtp_helo {
     my ($heap) = $_[HEAP];
     my $client = $heap->{client};
-    
+
     $client->put( SMTP_OK, 'Welcome.' );
   }
 
   sub smtp_quit {
     my ($heap) = $_[HEAP];
     my $client = $heap->{client};
-    
+
     $client->put( SMTP_QUIT, 'Good bye!' );
     $heap->{shutdown_now} = 1;
   }
@@ -49,12 +49,7 @@ relies on a CVS version of POE.
 =cut
 
 package POE::Component::Server::SMTP;
-#
-# $Revision: 1.4 $
-# $Id: SMTP.pm,v 1.4 2003/04/07 23:54:18 cwest Exp $
-#
 use strict;
-$^W = 1; # At least for development.
 
 use Exporter;
 use Mail::Internet;
@@ -69,17 +64,17 @@ use POE qw[
 ];
 
 use vars qw[$VERSION @ISA @EXPORT];
-$VERSION = (qw$Revision: 1.4 $)[1];
+$VERSION = '1.5';
 @ISA     = qw[Exporter];
 @EXPORT  = qw[
 	SMTP_SYTEM_STATUS SMTP_SYSTEM_HELP SMTP_SERVICE_READY SMTP_QUIT
 	SMTP_OK SMTP_WILL_FORWARD SMTP_CANNOT_VRFY_USER
-	
+
 	SMTP_START_MAIL_INPUT
-	
+
 	SMTP_NOT_AVAILABLE SMTP_SERVICE_UNAVAILABLE
 	SMTP_LOCAL_ERROR SMTP_NO_STORAGE
-	
+
 	SMTP_SYNTAX_ERROR SMTP_ARG_SYNTAX_ERROR SMTP_NOT_IMPLEMENTED
 	SMTP_BAD_SEQUENCE SMTP_ARG_NOT_IMPLEMENTED SMTP_UNAVAILABLE
 	SMTP_USER_NOT_LOCAL SMTP_QUOTA_LIMIT SMTP_MAILBOX_ERROR
@@ -92,12 +87,12 @@ This module exports a bunch of constants by default.
 
 	SMTP_SYTEM_STATUS SMTP_SYSTEM_HELP SMTP_SERVICE_READY SMTP_QUIT
 	SMTP_OK SMTP_WILL_FORWARD SMTP_CANNOT_VRFY_USER
-	
+
 	SMTP_START_MAIL_INPUT
-	
+
 	SMTP_NOT_AVAILABLE SMTP_SERVICE_UNAVAILABLE
 	SMTP_LOCAL_ERROR SMTP_NO_STORAGE
-	
+
 	SMTP_SYNTAX_ERROR SMTP_ARG_SYNTAX_ERROR SMTP_NOT_IMPLEMENTED
 	SMTP_BAD_SEQUENCE SMTP_ARG_NOT_IMPLEMENTED SMTP_UNAVAILABLE
 	SMTP_USER_NOT_LOCAL SMTP_QUOTA_LIMIT SMTP_MAILBOX_ERROR
@@ -145,6 +140,11 @@ follows.
 
 The alias name for this session.
 
+=item Address
+
+The address to bind to. If you don't do this you run the risk of
+becomming a relay.
+
 =item Hostname
 
 The host name to use when identifying the SMTP server.
@@ -181,6 +181,7 @@ sub spawn {
 	$args{InlineStates}  ||= { };
 
 	POE::Component::Server::TCP->new(
+                Address            => $args{Address},
 		Alias              => $args{Alias},
 		Port               => $args{Port},
 		SessionType        => 'POE::Session::MultiDispatch',
@@ -220,6 +221,7 @@ sub smtpd_client_connected {
 
 sub smtpd_client_disconnect {
 	my ($kernel, $heap) = @_[KERNEL, HEAP];
+	$kernel->yield( 'do_disconnect' );
 }
 
 sub smtpd_client_input {
@@ -363,6 +365,17 @@ print $data;
 
 =pod
 
+=item on_disconnect
+
+This event is called when the client disconnects. Specifically, when
+POE::Component::Server::TCP throws the C<ClientDisconnected> state. You
+can't always rely on an SMTP client calling C<QUIT>, so use this for
+garbage collection or handling an unexpected end of session.
+
+=cut
+
+=pod
+
 Any event that it triggered from the client that the server doesn't know
 how to handle will be passed to the C<_default> handler.  This handler
 will return C<SMTP_NOT_IMPLEMENTED>, unless you override it using
@@ -420,6 +433,10 @@ a TODO item.
 =head1 AUTHOR
 
 Casey West <casey@geeknest.com>
+
+=head1 THANKS
+
+Meng Wong, and http://pobox.com/
 
 =head1 COPYRIGHT
 
