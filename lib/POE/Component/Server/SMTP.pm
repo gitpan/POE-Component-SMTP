@@ -50,8 +50,8 @@ relies on a CVS version of POE.
 
 package POE::Component::Server::SMTP;
 #
-# $Revision: 1.3 $
-# $Id: SMTP.pm,v 1.3 2003/02/26 21:50:31 cwest Exp $
+# $Revision: 1.4 $
+# $Id: SMTP.pm,v 1.4 2003/04/07 23:54:18 cwest Exp $
 #
 use strict;
 $^W = 1; # At least for development.
@@ -69,7 +69,7 @@ use POE qw[
 ];
 
 use vars qw[$VERSION @ISA @EXPORT];
-$VERSION = (qw$Revision: 1.3 $)[1];
+$VERSION = (qw$Revision: 1.4 $)[1];
 @ISA     = qw[Exporter];
 @EXPORT  = qw[
 	SMTP_SYTEM_STATUS SMTP_SYSTEM_HELP SMTP_SERVICE_READY SMTP_QUIT
@@ -236,7 +236,7 @@ sub smtpd_client_input {
 		}
 	} else {
 		my ($client, $command, $data)  = ( $heap->{client}, @{$input} );
-		$kernel->yield( $command => $data );
+		$kernel->yield( $command => $command => $data );
 	}
 }
 
@@ -264,7 +264,8 @@ otherwise noted, event names corrispond to the uppercase version of the
 verb supplied from the client during an SMTP connection (HELO, VRFY, RCPT).
 
 Any input supplied after the command verb will be available to the
-event handler in $_[ARG0];
+event handler in C<$_[ARG1]>, the command name itself is available in
+C<$_[ARG0]>.
 
 =over 4
 
@@ -300,7 +301,7 @@ C<HELO> event in your C<InlineStates>.
 
 sub smtpd_HELO {
 	my ($kernel, $heap, $host) =
-		@_[KERNEL, HEAP, ARG0];
+		@_[KERNEL, HEAP, ARG1];
 	my $client = $heap->{client};
 
 	if ( $host && $host eq $heap->{args}->{Hostname} ) {
