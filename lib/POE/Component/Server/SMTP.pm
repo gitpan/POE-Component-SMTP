@@ -50,8 +50,8 @@ relies on a CVS version of POE.
 
 package POE::Component::Server::SMTP;
 #
-# $Revision: 1.1 $
-# $Id: SMTP.pm,v 1.1 2003/02/01 22:01:56 cwest Exp $
+# $Revision: 1.2 $
+# $Id: SMTP.pm,v 1.2 2003/02/02 23:10:40 cwest Exp $
 #
 use strict;
 $^W = 1; # At least for development.
@@ -69,7 +69,7 @@ use POE qw[
 ];
 
 use vars qw[$VERSION @ISA @EXPORT];
-$VERSION = (qw$Revision: 1.1 $)[1];
+$VERSION = (qw$Revision: 1.2 $)[1];
 @ISA     = qw[Exporter];
 @EXPORT  = qw[
 	SMTP_SYTEM_STATUS SMTP_SYSTEM_HELP SMTP_SERVICE_READY SMTP_QUIT
@@ -403,6 +403,15 @@ The following is what I would consider known issues.
 The only way to override builtin event handlers is using C<InlineStates>.
 The truth is that there probably shouldn't be any builtin handlers.  They
 will probably go away soon.
+
+=item
+
+Documentation and Tests are lacking.
+
+=item
+
+There is no POE::Component::Client::SMTP yet, though that's really
+a TODO item.
 
 =back
 

@@ -4,5 +4,5 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     'NAME'		=> 'POE::Component::SMTP',
     'VERSION_FROM'	=> 'lib/POE/Component/Server/SMTP.pm', # finds $VERSION
-    'PREREQ_PM'		=> { 'POE' => 0, 'Test::More' => 0 }, # e.g., Module::Name => 1.1
+    'PREREQ_PM'		=> { 'POE' => 0, 'POE::Session::MultiDispatch' => 0, 'Test::More' => 0 }, # e.g., Module::Name => 1.1
 );
