@@ -1,7 +1,7 @@
 package POE::Filter::SMTP;
 #
-# $Revision: 1.1 $
-# $Id: SMTP.pm,v 1.1 2003/10/30 23:37:52 cwest Exp $
+# $Revision: 1.2 $
+# $Id: SMTP.pm,v 1.2 2004/06/29 15:39:18 cwest Exp $
 #
 use strict;
 $^W = 1; # At least for development.
@@ -9,36 +9,43 @@ $^W = 1; # At least for development.
 use base qw[POE::Filter::Line];
 
 use vars qw[$VERSION];
-$VERSION = (qw$Revision: 1.1 $)[1];
+$VERSION = (qw$Revision: 1.2 $)[1];
 
 use constant CRLF => qq[\x0D\x0A]; # RFC 2821, 2.3.7
 
 sub new {
-	my ($class) = @_;
-	
-	return $class->SUPER::new( Literal => CRLF );
+    my ($class) = @_;
+    
+    return $class->SUPER::new( Literal => CRLF );
 }
 
 sub get_one {
-	my ($self) = shift;
+    my ($self) = shift;
 
-	my $lines = $self->SUPER::get_one( @_ );
+    my $lines = $self->SUPER::get_one( @_ );
 
-	foreach my $line ( @{$lines} ) {
-		my ($command, $data) = split /\s+/, $line, 2;
-		$data =~ s/\s+$// if $data;
-		$line = [ uc( $command ), $data ];
-	}
-	
-	return $lines;
+    foreach my $line ( @{$lines} ) {
+        my ($command, $data) = split /\s+/, $line, 2;
+        $data =~ s/\s+$// if $data;
+        $line = [ uc( $command ), $data ];
+    }
+    
+    return $lines;
 }
 
 sub put {
-	my ($self, $lines) = @_;
+    my ($self, $lines) = @_;
 
-	$lines = [ join ' ', @{$lines} ];
-	
-	return $self->SUPER::put( $lines );
+    my $code = shift @{$lines};
+    return $self->SUPER::put( [ "$code @{$lines}" ] )
+      if @{$lines} == 1;
+
+    my @output;    
+    push @output, "$code-$lines->[$_]"
+      foreach 0 .. $#{$lines} - 1;
+    push @output, "$code $lines->[-1]";
+    
+    return $self->SUPER::put( \@output );
 }
 
 1;

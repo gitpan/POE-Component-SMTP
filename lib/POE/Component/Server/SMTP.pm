@@ -64,7 +64,7 @@ use POE qw[
 ];
 
 use vars qw[$VERSION @ISA @EXPORT];
-$VERSION = '1.5';
+$VERSION = '1.6';
 @ISA     = qw[Exporter];
 @EXPORT  = qw[
 	SMTP_SYTEM_STATUS SMTP_SYSTEM_HELP SMTP_SERVICE_READY SMTP_QUIT

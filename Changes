@@ -1,4 +1,9 @@
-1.5
+1.6   2004-06-29
+
+  - Corrected support for multiline responses.
+    THIS MAY BREAK PRODUCTION CODE THAT WORKED AROUND THE BUG.
+
+1.5   2003-10-30
 
   - Added Address option, thanks to Meng Wong.
   - Added on_disconnect() state, thanks to Meng Wong.
